@@ -1,6 +1,6 @@
 # Open Booking API Stripe Extension
 
-This is the repository of the specification and JSON-LD namespace for an extension for the [Open Booking API](https://openactive.io/open-booking-api/EditorsDraft/1.0CR3/) to handle Stripe integrated payments.
+This is the repository of the specification and JSON-LD namespace for an extension for the [Open Booking API](https://openactive.io/open-booking-api/EditorsDraft/1.0CR3/) to handle [Stripe](https://stripe.com/) integrated payments.
 
 > Status: Draft | [Please Provide Feedback via GitHub](https://github.com/openactive/stripe-extension/issues)
 
