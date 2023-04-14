@@ -21,7 +21,7 @@
       "label": "clientSecret",
       "comment": "The `client_secret` within the Stripe Payment Intent",
       "domainIncludes": [
-        "beta:PaymentIntent"
+        "stripe:PaymentIntent"
       ],
       "rangeIncludes": [
         "schema:Text"
@@ -33,7 +33,7 @@
       "label": "publishableKey",
       "comment": "The Stripe `publishableKey`",
       "domainIncludes": [
-        "beta:PaymentIntent"
+        "stripe:PaymentIntent"
       ],
       "rangeIncludes": [
         "schema:Text"
