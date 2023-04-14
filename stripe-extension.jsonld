@@ -1,0 +1,43 @@
+{
+  "@context": [
+    "https://openactive.io/ns-extension",
+    {
+      "stripe": "https://openactive.io/stripe-extension#"
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "stripe:PaymentIntent",
+      "@type": "Class",
+      "label": "PaymentIntent",
+      "subClassOf": [
+        "oa:Payment"
+      ],
+      "comment": "OpenActive representation of a Stripe Payment Intent"
+    },
+    {
+      "@id": "stripe:clientSecret",
+      "@type": "Property",
+      "label": "clientSecret",
+      "comment": "The `client_secret` within the Stripe Payment Intent",
+      "domainIncludes": [
+        "beta:PaymentIntent"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
+      ]
+    },
+    {
+      "@id": "stripe:publishableKey",
+      "@type": "Property",
+      "label": "publishableKey",
+      "comment": "The Stripe `publishableKey`",
+      "domainIncludes": [
+        "beta:PaymentIntent"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
+      ]
+    }
+  ]
+}
