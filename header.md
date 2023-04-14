@@ -24,7 +24,7 @@ Additionally note that [Payment reconciliation detail validation](https://openac
 
 The namespace MUST be referenced using the URL `"https://openactive.io/stripe-extension"` (which will return the [JSON-LD definition](https://openactive.io/stripe-extension/stripe-extension.jsonld) if the `Accept` header contains `application/ld+json`), and is designed to be used in conjunction with the `"https://openactive.io/"` namespace.
 
-## `@context`
+## Context
 
 When this extension is in use, the `"@context"` of all requests and responses to the Open Booking API should include the namespace reference as follows:
 
