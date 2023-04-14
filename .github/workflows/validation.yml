@@ -24,5 +24,4 @@ jobs:
         uses: openactive/extension-documentation-generator@master
         with:
           header: header.md
-          context: beta.jsonld
-          with_issues: true
+          context: stripe-extension.jsonld
