@@ -50,7 +50,7 @@ The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Strip
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "stripe:paymentPageUri": "https://example.com/checkout",
+  "stripe:paymentPageUrl": "https://example.com/checkout",
 }
 ```
 
@@ -68,7 +68,7 @@ The C2 response provides enough information for the Broker to Authorise the Paym
 },
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "stripe:paymentPageUri": "https://example.com/checkout",
+  "stripe:paymentPageUrl": "https://example.com/checkout",
 }
 ```
 
@@ -80,7 +80,7 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "stripe:paymentPageUri": "https://example.com/checkout",
+  "stripe:paymentPageUrl": "https://example.com/checkout",
   "identifier": "pi_1GPsnyKarmweGdVC5WhNworN" // payment intent ID
 }
 ```
@@ -89,7 +89,7 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "stripe:paymentPageUri": "https://example.com/checkout",
+  "stripe:paymentPageUrl": "https://example.com/checkout",
   "identifier": "pi_1GPsnyKarmweGdVC5WhNworN" // payment intent ID
 }
 ```
