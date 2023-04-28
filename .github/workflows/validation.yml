@@ -18,7 +18,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           
       - name: JSON-LD Lint
-        run: npx jsonld-cli lint beta.jsonld
+        run: npx jsonld-cli lint stripe-extension.jsonld
 
       - name: Attempt Rendering of Documentation for Validation
         uses: openactive/extension-documentation-generator@master
