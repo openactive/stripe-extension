@@ -50,7 +50,7 @@ The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Strip
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "stripe:paymentPageUrl": "https://example.com/checkout",
+  "stripe:paymentPageUrl": "https://example.com/checkout"
 }
 ```
 
@@ -64,11 +64,11 @@ The C2 response provides enough information for the Broker to Authorise the Paym
   "identifier": "pi_1GPsnyKarmweGdVC5WhNworN", // payment intent ID
   "stripe:clientSecret": "pi_1GPsnyKarmweGdVC5WhNworN_secret_LgKKeZNVv4XlayiahHTt3YjHA",
   "stripe:publishableKey": "pk_test_4JnvQX1ZfhZacZh3ZiLOrAXq",
-  "stripe:connectAccountIdentifier": "acct_24BFMpJ1svR5A89k",
+  "stripe:connectAccountIdentifier": "acct_24BFMpJ1svR5A89k"
 },
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "stripe:paymentPageUrl": "https://example.com/checkout",
+  "stripe:paymentPageUrl": "https://example.com/checkout"
 }
 ```
 
