@@ -72,7 +72,7 @@
         "stripe:PaymentIntent"
       ],
       "rangeIncludes": [
-        "schema:Text"
+        "schema:URL"
       ]
     }
   ]
