@@ -7,6 +7,18 @@
   ],
   "@graph": [
     {
+      "@id": "stripe:paymentRequest",
+      "@type": "Property",
+      "label": "paymentRequest",
+      "comment": "A mechanism for the Broker to supply payment.",
+      "domainIncludes": [
+        "oa:OrderQuote"
+      ],
+      "rangeIncludes": [
+        "stripe:PaymentIntent"
+      ]
+    },
+    {
       "@id": "stripe:PaymentIntent",
       "@type": "Class",
       "label": "PaymentIntent",
@@ -31,7 +43,31 @@
       "@id": "stripe:publishableKey",
       "@type": "Property",
       "label": "publishableKey",
-      "comment": "The Stripe `publishableKey`",
+      "comment": "The Stripe `publishableKey` to use with Stripe.js",
+      "domainIncludes": [
+        "stripe:PaymentIntent"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
+      ]
+    },
+    {
+      "@id": "stripe:connectAccountIdentifier",
+      "@type": "Property",
+      "label": "connectAccountIdentifier",
+      "comment": "The Stripe `stripeAccount` identifier of Stripe Connect Account to use with Stripe.js",
+      "domainIncludes": [
+        "stripe:PaymentIntent"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
+      ]
+    },
+    {
+      "@id": "stripe:paymentPageUri",
+      "@type": "Property",
+      "label": "paymentPageUri",
+      "comment": "The URL of the page on which Stripe.js is used to capture payment details, or an App Store URL of the app in which Stripe is embedded.",
       "domainIncludes": [
         "stripe:PaymentIntent"
       ],
