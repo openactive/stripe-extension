@@ -43,30 +43,45 @@ Note as above, in order to conform to the Open Booking API, a Booking System mus
 
 ## Requests and responses
 
-### C2 response
+### C2 request
 
-The C2 response provides enough information for the Broker to Authorise the Payment Intent (invoking 3D Secure as necessary)
+The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Stripe for integrated payments, as it would with Payment reconciliation detail validation. The Broker must specify the web page or app on which Stripe will be used. This allows the booking system to authorise and track the usage of Stripe, which will aid PCI-DSS compliance.
 
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "identifier": "pi_123456789", // payment intent ID
-  "stripe:clientSecret": "sk_test_26PHem9AhJZvU623DfE1x4sd",
-  "stripe:publishableKey": "pk_test_TYooMQauvdEDq54NiTphI7jx"
+  "stripe:paymentPageUri": "https://example.com/checkout",
 }
 ```
 
-Note `payment` MUST NOT be supplied by the C1 or C2 request.
+### C2 response
+
+The C2 response provides enough information for the Broker to Authorise the Payment Intent (invoking 3D Secure as necessary). It also reflects back the provided `payment` data.
+
+```json
+"stripe:paymentRequest": {
+  "@type": "stripe:PaymentIntent",
+  "identifier": "pi_1GPsnyKarmweGdVC5WhNworN", // payment intent ID
+  "stripe:clientSecret": "pi_1GPsnyKarmweGdVC5WhNworN_secret_LgKKeZNVv4XlayiahHTt3YjHA",
+  "stripe:publishableKey": "pk_test_4JnvQX1ZfhZacZh3ZiLOrAXq",
+  "stripe:connectAccountIdentifier": "acct_24BFMpJ1svR5A89k",
+},
+"payment": {
+  "@type": "stripe:PaymentIntent",
+  "stripe:paymentPageUri": "https://example.com/checkout",
+}
+```
 
 ### B request and response
 
-The Broker must include the Payment Intent identifier in the request, and the Booking System must reflect it back in the response:
+The Broker must include the Payment Intent identifier in the request, and the Booking System must reflect it back in the response. This helps the Booking System to verify that the correct Payment Intent has been used by the Broker to accept a payment for this Order.
 
 #### B request
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "identifier": "pi_123456789", // payment intent ID
+  "stripe:paymentPageUri": "https://example.com/checkout",
+  "identifier": "pi_1GPsnyKarmweGdVC5WhNworN" // payment intent ID
 }
 ```
 
@@ -74,7 +89,8 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
-  "identifier": "pi_123456789", // payment intent ID
+  "stripe:paymentPageUri": "https://example.com/checkout",
+  "identifier": "pi_1GPsnyKarmweGdVC5WhNworN" // payment intent ID
 }
 ```
 
