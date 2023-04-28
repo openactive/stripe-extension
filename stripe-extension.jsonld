@@ -64,9 +64,9 @@
       ]
     },
     {
-      "@id": "stripe:paymentPageUri",
+      "@id": "stripe:paymentPageUrl",
       "@type": "Property",
-      "label": "paymentPageUri",
+      "label": "paymentPageUrl",
       "comment": "The URL of the page on which Stripe.js is used to capture payment details, or an App Store URL of the app in which Stripe is embedded.",
       "domainIncludes": [
         "stripe:PaymentIntent"
