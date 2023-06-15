@@ -94,6 +94,27 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 }
 ```
 
+### Test Interface Action
+
+Test interface actions simulate user interactions that would ordinarily be performed via on the frontend via Stripe Elements.
+
+#### AuthorisePaymentIntentSimulateAction
+This test action simulates the authorisation of a card by confirming the Payment Intent. This is useful for [Stripe Test Mode](https://stripe.com/docs/test-mode), to test paid booking without requiring Stripe Elements to authorise the card.
+
+```json
+{
+    "@context": [
+        "https://openactive.io/",
+        "https://openactive.io/test-interface",
+        "https://openactive.io/stripe-extension"
+    ],
+    "@type": "stripe:AuthorisePaymentIntentSimulateAction",
+    "object": {
+        "@type": "Order",
+        "@id": "https://example.com/api/orders/e11429ea-467f-4270-ab62-e47368996fe8"
+    }
+}
+```
 
 
 # Namespace
