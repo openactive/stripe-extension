@@ -110,8 +110,8 @@ This test action simulates the authorisation of a card by confirming the Payment
     ],
     "@type": "stripe:AuthorisePaymentIntentSimulateAction",
     "object": {
-        "@type": "Order",
-        "@id": "https://example.com/api/orders/e11429ea-467f-4270-ab62-e47368996fe8"
+      "@type": "stripe:PaymentIntent",
+      "identifier": "pi_1GPsnyKarmweGdVC5WhNworN" // payment intent ID
     }
 }
 ```
