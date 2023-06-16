@@ -96,7 +96,7 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 
 ### Test Interface Action
 
-Test interface actions simulate user interactions that would ordinarily be performed via on the frontend via Stripe Elements.
+Test interface actions are defined to simulate user interactions that would ordinarily be performed via on the frontend via Stripe Elements.
 
 #### AuthorisePaymentIntentSimulateAction
 This test action simulates the authorisation of a card by confirming the Payment Intent. This is useful for [Stripe Test Mode](https://stripe.com/docs/test-mode), to test paid booking without requiring Stripe Elements to authorise the card.
