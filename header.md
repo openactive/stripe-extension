@@ -94,7 +94,9 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 }
 ```
 
-## `OpenBookingError` subclasses
+## Errors
+
+### `OpenBookingError` subclasses
 
 A number of `oa:OpenBookingError` subclasses are defined to identify the problem type of various error conditions. These are based on Stripe's own [error types](https://stripe.com/docs/api/errors#errors-type), and pass through any errors received from Stripe. All other errors defined here subclass `stripe:Error`, which subclasses `oa:OpenBookingError`.
 
