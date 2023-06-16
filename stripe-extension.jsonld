@@ -2,6 +2,7 @@
   "@context": [
     "https://openactive.io/ns-extension",
     {
+      "test": "https://openactive.io/test-interface#",
       "stripe": "https://openactive.io/stripe-extension#"
     }
   ],
@@ -73,6 +74,15 @@
       ],
       "rangeIncludes": [
         "schema:URL"
+      ]
+    },
+    {
+      "@id": "stripe:AuthorisePaymentIntentSimulateAction",
+      "@type": "Class",
+      "label": "AuthorisePaymentIntentSimulateAction",
+      "comment": "Simulate the [Authorisation of a Stripe PaymentIntent](https://stripe.com/docs/payments/place-a-hold-on-a-payment-method#authorize-only) for a given `Order`.",
+      "subClassOf": [
+        "test:OpenBookingSimulateAction"
       ]
     }
   ]
