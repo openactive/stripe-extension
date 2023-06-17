@@ -122,7 +122,7 @@ Attributes from a [Stripe error](https://stripe.com/docs/api/errors) are mapped 
 
 | Property                                                           | Stripe [attribute](https://stripe.com/docs/api/errors)      | Type | Notes |
 |--------------------------------------------------------------------|-------------|-|------|
-| `@type`                                                            | - | [`schema:Text`](https://schema.org/Text) | `OpenBookingError` |
+| `@type`                                                            | - | [`schema:Text`](https://schema.org/Text) | `stripe:Error` |
 | [`schema:name`](https://schema.org/name)                           | - | [`schema:Text`](https://schema.org/Text) | A short, human-readable summary of the problem type, that MUST communicate the associated "Use Case" defined above. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization. |
 | [`schema:description`](https://schema.org/description)             | [`message`](https://stripe.com/docs/api/errors#errors-message) | [`schema:Text`](https://schema.org/Text) | A human-readable message providing details about the specific occurrence of the problem. For `stripe:CardError`, these messages can be shown to end users. |
 | [`schema:url`](https://schema.org/url)                             | [`doc_url`](https://stripe.com/docs/api/errors#errors-doc_url) | [`schema:URL`](https://schema.org/URL) | A URL to more information about the error code reported. |
