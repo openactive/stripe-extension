@@ -148,7 +148,7 @@ Attributes from a [Stripe error](https://stripe.com/docs/api/errors) are mapped 
   "stripe:errorCode": "card_declined",
   "stripe:declineCode": "incorrect_cvc",
   "instance": "https://dashboard.stripe.com/test/logs/req_1234567890abcdef",
-  "statusCode": "400"
+  "statusCode": 400
 }
 ```
 
