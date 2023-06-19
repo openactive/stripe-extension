@@ -20,7 +20,46 @@ Please note:
 
 Additionally note that [Payment reconciliation detail validation](https://openactive.io/open-booking-api/EditorsDraft/1.0CR3/#payment-reconciliation-detail-validation) cannot be used in conjunction with this Stripe extension, as reconciliation is handled entirely by the Booking System in this case.
 
-## Namespace
+## Changes to Simple Booking Flow
+
+The sequence diagram below outlines the changes to the Simple Booking Flow when the Stripe Extension is in use:
+
+```mermaid
+sequenceDiagram
+  actor P as Customer
+  participant C as Broker
+  participant I as Booking System
+  participant S as Stripe
+  P ->> C: Confirm selection of<br />Opportunity/Offer
+  C ->> I: C2
+  I ->> I: [Check Availability, Optionally lease, etc]
+  I ->> S: Create Payment Intent<br />with expected payment amount
+  S -->> I: Payment Intent Client Secret
+  I -->> C: C2 Response, with:<br />-Publishable Stripe Key<br />- Seller Stripe Account ID <br />- Payment Intent Client Secret
+
+  C ->> C: Set-up Stripe Elements<br />using received Stripe details
+  P ->> C: Enters card details<br />and clicks pay
+  C ->> S: stripe.confirmPayment(..)
+  opt If 3D Secure required
+    S ->> C: Automatically prompt customer<br />with verification modal
+    C -->> S: Customer completes verification
+  end
+
+  alt If Payment Hold and Verification Successful
+    S ->> S: Put hold on payment
+    S ->> P: Redirect to Client's "Payment Processing" page<br />(return_url)<br />URL query contains Payment Intent ID
+    P -->> C: "Payment Processing"<br />page loads
+    C ->> I: (on page load) call B<br />with Payment Intent ID
+    I ->> I: [Make booking]
+    I ->> S: Capture PaymentIntent
+    S -->> I: 
+    I -->> C: B response
+    C ->> C: [Perform post-booking actions]
+  end
+```
+
+
+## Referencing the namespace
 
 The namespace MUST be referenced using the URL `"https://openactive.io/stripe-extension"` (which will return the [JSON-LD definition](https://openactive.io/stripe-extension/stripe-extension.jsonld) if the `Accept` header contains `application/ld+json`), and is designed to be used in conjunction with the `"https://openactive.io/"` namespace.
 
@@ -72,11 +111,27 @@ The C2 response provides enough information for the Broker to Authorise the Paym
 }
 ```
 
-### B request and response
+### Orders feed (Approval Flow with Proposal Amendment only)
+
+For the Approval Flow, where [Proposal Amendment](https://openactive.io/open-booking-api/EditorsDraft/1.0CR3/#proposal-amendment) is supported, a new `stripe:paymentRequest` may be present in the revised `OrderProposal` in the Order Proposals feed. This is only present in the case that the `totalPaymentDue` has increased since **P**, and where [incremental authorization](https://stripe.com/docs/terminal/features/incremental-authorizations) has failed.
+
+```json
+"stripe:paymentRequest": {
+  "@type": "stripe:PaymentIntent",
+  "identifier": "pi_1GPsnyKarmweGdVC5WhNworN", // new payment intent ID
+  "stripe:clientSecret": "pi_1GPsnyKarmweGdVC5WhNworN_secret_LgKKeZNVv4XlayiahHTt3YjHA",
+  "stripe:publishableKey": "pk_test_4JnvQX1ZfhZacZh3ZiLOrAXq",
+  "stripe:connectAccountIdentifier": "acct_24BFMpJ1svR5A89k"
+}
+```
+
+### B/P request and response
 
 The Broker must include the Payment Intent identifier in the request, and the Booking System must reflect it back in the response. This helps the Booking System to verify that the correct Payment Intent has been used by the Broker to accept a payment for this Order.
 
-#### B request
+For the Approval Flow, `payment` is only required at **B** in the case that a new  `stripe:paymentRequest` was present in the revised `OrderProposal` in the Order Proposals feed (which is only possible if [Proposal Amendment](https://openactive.io/open-booking-api/EditorsDraft/1.0CR3/#proposal-amendment) has been implemented by the Booking System).
+
+#### B/P request
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
@@ -85,7 +140,7 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 }
 ```
 
-#### B response
+#### B/P response
 ```json
 "payment": {
   "@type": "stripe:PaymentIntent",
