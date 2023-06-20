@@ -131,6 +131,8 @@ The Broker must include the Payment Intent identifier in the request, and the Bo
 
 For the Approval Flow, `payment` is only required at **B** in the case that a new  `stripe:paymentRequest` was present in the revised `OrderProposal` in the Order Proposals feed (which is only possible if [Proposal Amendment](https://openactive.io/open-booking-api/EditorsDraft/1.0CR3/#proposal-amendment) has been implemented by the Booking System).
 
+Note that if `"@type": "stripe:PaymentIntent"` is included in the **B/P** request, then C2 MUST have been called previously to retrieve a `stripe:paymentRequest`.
+
 #### B/P request
 ```json
 "payment": {
