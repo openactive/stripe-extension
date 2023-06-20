@@ -82,6 +82,17 @@ Note as above, in order to conform to the Open Booking API, a Booking System mus
 
 ## Requests and responses
 
+The Booking System must process requests as defined in this extension, only if `stripe:paymentPageUrl` is present inside a `stripe:PaymentIntent` within the `payment` property of a **C2**, **B**, or **P** call:
+
+```json
+"payment": {
+  "@type": "stripe:PaymentIntent",
+  "stripe:paymentPageUrl": "https://example.com/checkout"
+}
+```
+
+If the `payment` is of any other `@type`, the Booking System must treat the request as if Stripe extension is not implemented.
+
 ### C2 request
 
 The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Stripe for integrated payments, as it would with Payment reconciliation detail validation. The Broker must specify the web page or app on which Stripe will be used. This allows the booking system to authorise and track the usage of Stripe, which will aid PCI-DSS compliance.
