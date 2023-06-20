@@ -180,7 +180,9 @@ A number of `oa:OpenBookingError` subclasses are defined to identify the problem
 | `stripe:MissingPaymentIntentDetailsError`   | 400         | `stripe:PaymentIntent` details (e.g. `identifier`) were expected but not set. |
 | `stripe:PaymentIntentMismatchError`         | 400         | `stripe:PaymentIntent` `identifier` does not match the `identifier` provided by the C2 response for this `Order`. |
 
-Every error returned from Stripe should map onto either `stripe:ApiError`, `stripe:CardError`, `stripe:IdempotencyError`, or `stripe:InvalidRequestError` depending on the [`type`](https://stripe.com/docs/api/errors#errors-type) returned in the Stripe error, which has a value of either `api_error`, `card_error`, `idempotency_error`, or `invalid_request_error`. `stripe:Error` is intended for unexpected errors, i.e. cases where Stripe itself does not return an error (such as a network failure).
+Every error returned from Stripe should map onto either `stripe:ApiError`, `stripe:CardError`, `stripe:IdempotencyError`, or `stripe:InvalidRequestError` depending on the [`type`](https://stripe.com/docs/api/errors#errors-type) returned in the Stripe error, which has a value of either `api_error`, `card_error`, `idempotency_error`, or `invalid_request_error`.
+
+`stripe:Error` is intended to be returned in the case of unexpected errors; e.g. cases where Stripe itself does not return an error (such as a network failure), or where Stripe behaves in an inconsistent or unexpected way (such as a Payment Intent that was previously created at C2 not being found at B).
 
 Note that `stripe:IdempotencyError` and `stripe:InvalidRequestError` should not occur if the Booking System has implemented this extension correctly.
 
