@@ -169,6 +169,8 @@ A number of `oa:OpenBookingError` subclasses are defined to identify the problem
 
 Note that `stripe:IdempotencyError` and `stripe:InvalidRequestError` should not occur if the Booking System has implemented this extension correctly.
 
+`stripe:Error` is intended for unexpected errors, i.e. cases where Stripe itself does not return an error (such as a network failure). All errors returned by Stripe should be mapped to one of the more specific error types defined above.
+
 Note also that `stripe:MissingPaymentIntentDetailsError` and `stripe:PaymentIntentMismatchError` relate to issues with Broker behaviour, and do not originate from Stripe.
 
 ### `stripe:Error` property mapping
