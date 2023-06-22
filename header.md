@@ -263,7 +263,7 @@ This test action simulates the authorisation of a card by confirming the Payment
 }
 ```
 
-Note that the `seller` MUST be included to allow the Booking System to deterimine which Stripe Account the `stripe:PaymentIntent` is associated with.
+Note that the `seller` MUST be included to allow the Booking System to deterimine which Stripe Account that the `stripe:PaymentIntent` is associated with.
 
 For a list of the various test values for `stripe:paymentMethod` (e.g. `pm_card_chargeDeclinedIncorrectCvc`) see the [Stripe documentation](https://stripe.com/docs/testing?testing-method=payment-methods#declined-payments).
 
