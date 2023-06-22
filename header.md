@@ -152,7 +152,7 @@ For the Approval Flow, `payment` is only required at **B** in the case that a ne
 
 Note that if `"@type": "stripe:PaymentIntent"` is included in the **B/P** request, then **C1** or **C2** MUST have been called previously to retrieve a `stripe:paymentRequest`.
 
-In keeping with the specification, `payment` MUST NOT be supplied where the `totalPaymentDue` at **C2** is of zero `price`.
+In keeping with the specification, `payment` MUST NOT be present where the `totalPaymentDue` at **C2** is of zero `price`.
 
 #### B/P request
 ```json
