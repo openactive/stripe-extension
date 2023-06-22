@@ -93,9 +93,11 @@ The Booking System must process requests as defined in this extension, only if `
 
 If the `payment` is of any other `@type`, the Booking System must treat the request as if Stripe extension is not implemented.
 
-### C2 request
+The Stripe Extension must be used consistently (or not) for the same Order UUID.
 
-The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Stripe for integrated payments, as it would with Payment reconciliation detail validation. The Broker must specify the web page or app on which Stripe will be used. This allows the booking system to authorise and track the usage of Stripe, which will aid PCI-DSS compliance.
+### C1/C2 request
+
+The Broker uses a `"stripe:PaymentIntent"` within `payment` to indicate an intention to use Stripe for integrated payments, as it would with Payment reconciliation detail validation. The Broker must specify the web page or app on which Stripe will be used. This allows the booking system to authorise and track the usage of Stripe, which will aid PCI-DSS compliance.
 
 ```json
 "payment": {
@@ -104,9 +106,11 @@ The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Strip
 }
 ```
 
-### C2 response
+Note that some Broker use cases will capture the `customer` details on the same page as the card details, and the Stripe Extension must be used consistently (or not) for the same Order UUID, hence the above MUST be included in both C1 and C2.
 
-The C2 response provides enough information for the Broker to Authorise the Payment Intent (invoking 3D Secure as necessary). It also reflects back the provided `payment` data.
+### C1/C2 response
+
+The C1 and C2 responses each provide enough information for the Broker to authorise the Payment Intent (invoking 3D Secure as necessary). They also reflect back the provided `payment` data.
 
 ```json
 "stripe:paymentRequest": {
@@ -121,6 +125,9 @@ The C2 response provides enough information for the Broker to Authorise the Paym
   "stripe:paymentPageUrl": "https://example.com/checkout"
 }
 ```
+
+The contents of `stripe:paymentRequest` MUST be identical in both C1 and C2 responses.
+
 
 ### Orders feed (Approval Flow with Proposal Amendment only)
 
@@ -177,8 +184,9 @@ A number of `oa:OpenBookingError` subclasses are defined to identify the problem
 | `stripe:CardError`                          | 400         | The user has provided a card that cannot be charged |
 | `stripe:IdempotencyError`                   | 409         | An `Idempotency-Key` was re-used on a request to Stripe that did not match the first request's API endpoint and parameters |
 | `stripe:InvalidRequestError`                | 400         | Request to Stripe has invalid parameters |
-| `stripe:MissingPaymentIntentDetailsError`   | 400         | `stripe:PaymentIntent` details (e.g. `identifier`) were expected but not set. |
-| `stripe:PaymentIntentMismatchError`         | 400         | `stripe:PaymentIntent` `identifier` does not match the `identifier` provided by the C2 response for this `Order`. |
+| `stripe:MissingPaymentIntentDetailsError`   | 400         | `stripe:PaymentIntent` details (e.g. `identifier`) were expected but not set. The Stripe Extension is in use (`stripe:PaymentIntent` was supplied at **C1**/**C2**), and `payment` `identifier` is not present at **B**/**P**. |
+| `stripe:UnnecessaryPaymentIntentIdentifierError`| 400     | `stripe:PaymentIntent` must not contain `identifier` at **C1** or **C2**. |
+| `stripe:PaymentIntentMismatchError`         | 400         | `stripe:PaymentIntent` `identifier` at **B**/**P** does not match the `identifier` provided by the C2 response for this `Order`. |
 
 Every error returned from Stripe should map onto either `stripe:ApiError`, `stripe:CardError`, `stripe:IdempotencyError`, or `stripe:InvalidRequestError` depending on the [`type`](https://stripe.com/docs/api/errors#errors-type) returned in the Stripe error, which has a value of either `api_error`, `card_error`, `idempotency_error`, or `invalid_request_error`.
 
@@ -186,7 +194,9 @@ Every error returned from Stripe should map onto either `stripe:ApiError`, `stri
 
 Note that `stripe:IdempotencyError` and `stripe:InvalidRequestError` should not occur if the Booking System has implemented this extension correctly.
 
-Note also that `stripe:MissingPaymentIntentDetailsError` and `stripe:PaymentIntentMismatchError` relate to issues with Broker behaviour, and do not originate from Stripe.
+Note also that `stripe:MissingPaymentIntentDetailsError` and `stripe:PaymentIntentMismatchError` relate to issues with Broker behaviour, and do not originate from Stripe. They MUST only occur at **B**/**P**, as it is the presence of 
+
+`stripe:MissingPaymentIntentDetailsError` occurs when .
 
 ### `stripe:Error` property mapping
 
