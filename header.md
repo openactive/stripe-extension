@@ -78,13 +78,11 @@ When this extension is in use, the `"@context"` of all requests and responses to
 }
 ```
 
-Note as above, in order to conform to the Open Booking API, a Booking System must respond to standard Open Booking API requests (that do not include this additional namespace in the `"@context"`) as per the Open Booking API specification.
+Note as above, in order to conform to the Open Booking API, a Booking System MUST respond to standard Open Booking API requests (that do not include this additional namespace in the `"@context"`) as per the Open Booking API specification.
 
 ## Requests and responses
 
-### C2 request
-
-The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Stripe for integrated payments, as it would with Payment reconciliation detail validation. The Broker must specify the web page or app on which Stripe will be used. This allows the booking system to authorise and track the usage of Stripe, which will aid PCI-DSS compliance.
+The Booking System MUST process requests as defined in this extension, only if `stripe:paymentPageUrl` is present inside a `stripe:PaymentIntent` within the `payment` property of a **C2**, **B**, or **P** call:
 
 ```json
 "payment": {
@@ -93,9 +91,26 @@ The Broker uses a `"stripe:PaymentIntent"` to indicate an intention to use Strip
 }
 ```
 
-### C2 response
+If the `payment` is of any other `@type`, the Booking System MUST treat the request as if Stripe extension is not implemented.
 
-The C2 response provides enough information for the Broker to Authorise the Payment Intent (invoking 3D Secure as necessary). It also reflects back the provided `payment` data.
+The Stripe Extension MUST be used consistently (or not) for a given Order UUID.
+
+### C1/C2 request
+
+The Broker uses a `"stripe:PaymentIntent"` within `payment` to indicate an intention to use Stripe for integrated payments, as it would with Payment reconciliation detail validation. The Broker MUST specify the web page or app on which Stripe will be used. This allows the booking system to authorise and track the usage of Stripe, which will aid PCI-DSS compliance.
+
+```json
+"payment": {
+  "@type": "stripe:PaymentIntent",
+  "stripe:paymentPageUrl": "https://example.com/checkout"
+}
+```
+
+Note that some Broker use cases will capture the `customer` details on the same page as the card details, and the Stripe Extension MUST be used consistently (or not) for the same Order UUID, hence the above MUST be included in both C1 and C2.
+
+### C1/C2 response
+
+The C1 and C2 responses each provide enough information for the Broker to authorise the Payment Intent (invoking 3D Secure as necessary). They also reflect back the provided `payment` data.
 
 ```json
 "stripe:paymentRequest": {
@@ -110,6 +125,10 @@ The C2 response provides enough information for the Broker to Authorise the Paym
   "stripe:paymentPageUrl": "https://example.com/checkout"
 }
 ```
+
+The contents of `stripe:paymentRequest` MUST be identical in both **C1** and **C2** responses.
+
+`stripe:paymentRequest` MUST only be present in **C1** and **C2** responses when `totalPaymentDue` contains a non-zero `price`.
 
 ### Orders feed (Approval Flow with Proposal Amendment only)
 
@@ -127,9 +146,13 @@ For the Approval Flow, where [Proposal Amendment](https://openactive.io/open-boo
 
 ### B/P request and response
 
-The Broker must include the Payment Intent identifier in the request, and the Booking System must reflect it back in the response. This helps the Booking System to verify that the correct Payment Intent has been used by the Broker to accept a payment for this Order.
+The Broker MUST include the Payment Intent identifier in the request, and the Booking System MUST reflect it back in the response. This helps the Booking System to verify that the correct Payment Intent has been used by the Broker to accept a payment for this Order.
 
 For the Approval Flow, `payment` is only required at **B** in the case that a new  `stripe:paymentRequest` was present in the revised `OrderProposal` in the Order Proposals feed (which is only possible if [Proposal Amendment](https://openactive.io/open-booking-api/EditorsDraft/1.0CR3/#proposal-amendment) has been implemented by the Booking System).
+
+Note that if `"@type": "stripe:PaymentIntent"` is included in the **B/P** request, then **C1** or **C2** MUST have been called previously to retrieve a `stripe:paymentRequest`.
+
+In keeping with the specification, `payment` MUST NOT be present where the `totalPaymentDue` at **C2** is of zero `price`.
 
 #### B/P request
 ```json
@@ -164,12 +187,17 @@ A number of `oa:OpenBookingError` subclasses are defined to identify the problem
 | `stripe:CardError`                          | 400         | The user has provided a card that cannot be charged |
 | `stripe:IdempotencyError`                   | 409         | An `Idempotency-Key` was re-used on a request to Stripe that did not match the first request's API endpoint and parameters |
 | `stripe:InvalidRequestError`                | 400         | Request to Stripe has invalid parameters |
-| `stripe:MissingPaymentIntentDetailsError`   | 400         | `stripe:PaymentIntent` details (e.g. `identifier`) were expected but not set. |
-| `stripe:PaymentIntentMismatchError`         | 400         | `stripe:PaymentIntent` `identifier` does not match the `identifier` provided by the C2 response for this `Order`. |
+| `stripe:MissingPaymentIntentDetailsError`   | 400         | `stripe:PaymentIntent` details `identifier` and `stripe:paymentPageUrl` were expected at **B**/**P**, but were not set. |
+| `stripe:PaymentIntentContainsExcessivePropertiesError`| 400     | `stripe:PaymentIntent` MUST NOT contain `identifier` at **C1** or **C2**. |
+| `stripe:PaymentIntentMismatchError`         | 400         | `stripe:PaymentIntent` `identifier` at **B**/**P** does not match the `identifier` provided by the **C2** response for this `Order`. |
+
+Every error returned from Stripe should map onto either `stripe:ApiError`, `stripe:CardError`, `stripe:IdempotencyError`, or `stripe:InvalidRequestError` depending on the [`type`](https://stripe.com/docs/api/errors#errors-type) returned in the Stripe error, which has a value of either `api_error`, `card_error`, `idempotency_error`, or `invalid_request_error`.
+
+`stripe:Error` is intended to be returned in the case of unexpected errors from Stripe (i.e. cases where Stripe itself does not return an error, such as a network failure) or errors relating to unexpected Stripe behaviour (i.e. where Stripe behaves in an inconsistent or unexpected way, such as a Payment Intent that was previously created at C2 not being found at B).
 
 Note that `stripe:IdempotencyError` and `stripe:InvalidRequestError` should not occur if the Booking System has implemented this extension correctly.
 
-Note also that `stripe:MissingPaymentIntentDetailsError` and `stripe:PaymentIntentMismatchError` relate to issues with Broker behaviour, and do not originate from Stripe.
+Note also that `stripe:MissingPaymentIntentDetailsError`, `stripe:PaymentIntentMismatchError` and `stripe:PaymentIntentContainsExcessivePropertiesError` relate to issues with Broker behaviour, and do not originate from Stripe.
 
 ### `stripe:Error` property mapping
 
@@ -210,7 +238,7 @@ Attributes from a [Stripe error](https://stripe.com/docs/api/errors) are mapped 
 
 ### Test Interface Action
 
-Test interface actions are defined to simulate user interactions that would ordinarily be performed via on the frontend via Stripe Elements.
+Test interface actions are defined to simulate user interactions that would ordinarily be performed on the frontend via Stripe Elements.
 
 #### `stripe:ConfirmPaymentIntentSimulateAction`
 This test action simulates the authorisation of a card by confirming the Payment Intent. This is useful for test code that uses [Stripe Test Mode](https://stripe.com/docs/test-mode) to test paid booking on the backend without requiring a frontend instance of Stripe Elements to authorise the card.
@@ -225,11 +253,17 @@ This test action simulates the authorisation of a card by confirming the Payment
     "@type": "stripe:ConfirmPaymentIntentSimulateAction",
     "object": {
       "@type": "stripe:PaymentIntent",
+      "referencesOrder": {
+        "@type": "Order",
+        "seller": "https://example.com/api/organisations/123",
+      },
       "identifier": "pi_1GPsnyKarmweGdVC5WhNworN" // payment intent ID
     },
     "stripe:paymentMethod": "pm_card_visa"
 }
 ```
+
+Note that the `seller` MUST be included to allow the Booking System to deterimine which Stripe Account that the `stripe:PaymentIntent` is associated with.
 
 For a list of the various test values for `stripe:paymentMethod` (e.g. `pm_card_chargeDeclinedIncorrectCvc`) see the [Stripe documentation](https://stripe.com/docs/testing?testing-method=payment-methods#declined-payments).
 
