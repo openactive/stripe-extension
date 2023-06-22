@@ -185,7 +185,7 @@ A number of `oa:OpenBookingError` subclasses are defined to identify the problem
 | `stripe:IdempotencyError`                   | 409         | An `Idempotency-Key` was re-used on a request to Stripe that did not match the first request's API endpoint and parameters |
 | `stripe:InvalidRequestError`                | 400         | Request to Stripe has invalid parameters |
 | `stripe:MissingPaymentIntentDetailsError`   | 400         | `stripe:PaymentIntent` details `identifier` and `stripe:paymentPageUrl` were expected at **B**/**P**, but were not set. |
-| `stripe:UnnecessaryPaymentIntentIdentifierError`| 400     | `stripe:PaymentIntent` must not contain `identifier` at **C1** or **C2**. |
+| `stripe:PaymentIntentContainsExcessivePropertiesError`| 400     | `stripe:PaymentIntent` must not contain `identifier` at **C1** or **C2**. |
 | `stripe:PaymentIntentMismatchError`         | 400         | `stripe:PaymentIntent` `identifier` at **B**/**P** does not match the `identifier` provided by the C2 response for this `Order`. |
 
 Every error returned from Stripe should map onto either `stripe:ApiError`, `stripe:CardError`, `stripe:IdempotencyError`, or `stripe:InvalidRequestError` depending on the [`type`](https://stripe.com/docs/api/errors#errors-type) returned in the Stripe error, which has a value of either `api_error`, `card_error`, `idempotency_error`, or `invalid_request_error`.
@@ -194,9 +194,7 @@ Every error returned from Stripe should map onto either `stripe:ApiError`, `stri
 
 Note that `stripe:IdempotencyError` and `stripe:InvalidRequestError` should not occur if the Booking System has implemented this extension correctly.
 
-Note also that `stripe:MissingPaymentIntentDetailsError` and `stripe:PaymentIntentMismatchError` relate to issues with Broker behaviour, and do not originate from Stripe. They MUST only occur at **B**/**P**, as it is the presence of 
-
-`stripe:MissingPaymentIntentDetailsError` occurs when .
+Note also that `stripe:MissingPaymentIntentDetailsError` and `stripe:PaymentIntentMismatchError` relate to issues with Broker behaviour, and do not originate from Stripe.
 
 ### `stripe:Error` property mapping
 
