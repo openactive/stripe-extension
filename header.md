@@ -227,7 +227,7 @@ Attributes from a [Stripe error](https://stripe.com/docs/api/errors) are mapped 
 
 ### Test Interface Action
 
-Test interface actions are defined to simulate user interactions that would ordinarily be performed via on the frontend via Stripe Elements.
+Test interface actions are defined to simulate user interactions that would ordinarily be performed on the frontend via Stripe Elements.
 
 #### `stripe:ConfirmPaymentIntentSimulateAction`
 This test action simulates the authorisation of a card by confirming the Payment Intent. This is useful for test code that uses [Stripe Test Mode](https://stripe.com/docs/test-mode) to test paid booking on the backend without requiring a frontend instance of Stripe Elements to authorise the card.
@@ -242,11 +242,17 @@ This test action simulates the authorisation of a card by confirming the Payment
     "@type": "stripe:ConfirmPaymentIntentSimulateAction",
     "object": {
       "@type": "stripe:PaymentIntent",
+      "referencesOrder": {
+        "@type": "Order",
+        "seller": "https://example.com/api/organisations/123",
+      },
       "identifier": "pi_1GPsnyKarmweGdVC5WhNworN" // payment intent ID
     },
     "stripe:paymentMethod": "pm_card_visa"
 }
 ```
+
+Note that the `seller` MUST be included to allow the Booking System to deterimine which Stripe Account the `stripe:PaymentIntent` is associated with.
 
 For a list of the various test values for `stripe:paymentMethod` (e.g. `pm_card_chargeDeclinedIncorrectCvc`) see the [Stripe documentation](https://stripe.com/docs/testing?testing-method=payment-methods#declined-payments).
 
