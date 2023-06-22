@@ -194,7 +194,7 @@ Every error returned from Stripe should map onto either `stripe:ApiError`, `stri
 
 Note that `stripe:IdempotencyError` and `stripe:InvalidRequestError` should not occur if the Booking System has implemented this extension correctly.
 
-Note also that `stripe:MissingPaymentIntentDetailsError` and `stripe:PaymentIntentMismatchError` relate to issues with Broker behaviour, and do not originate from Stripe.
+Note also that `stripe:MissingPaymentIntentDetailsError`, `stripe:PaymentIntentMismatchError` and `stripe:PaymentIntentContainsExcessivePropertiesError` relate to issues with Broker behaviour, and do not originate from Stripe.
 
 ### `stripe:Error` property mapping
 
