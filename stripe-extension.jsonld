@@ -84,6 +84,78 @@
       "subClassOf": [
         "test:OpenBookingSimulateAction"
       ]
+    },
+    {
+      "@id": "stripe:Error",
+      "@type": "Class",
+      "label": "Error",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when a problem with Stripe was encountered that did not have one of the known error types specified in this extension"
+    },
+    {
+      "@id": "stripe:ApiError",
+      "@type": "Class",
+      "label": "ApiError",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when an API error returned from Stripe's servers"
+    },
+    {
+      "@id": "stripe:CardError",
+      "@type": "Class",
+      "label": "CardError",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when the user has provided a card that cannot be charged"
+    },
+    {
+      "@id": "stripe:IdempotencyError",
+      "@type": "Class",
+      "label": "IdempotencyError",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when an Idempotency-Key was re-used on a request to Stripe that did not match the first request's API endpoint and parameters"
+    },
+    {
+      "@id": "stripe:InvalidRequestError",
+      "@type": "Class",
+      "label": "InvalidRequestError",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when a request to Stripe has invalid parameters"
+    },
+    {
+      "@id": "stripe:MissingPaymentIntentDetailsError",
+      "@type": "Class",
+      "label": "MissingPaymentIntentDetailsError",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when the stripe:PaymentIntent details identifier and stripe:paymentPageUrl were expected at B/P, but were not set."
+    },
+    {
+      "@id": "stripe:PaymentIntentContainsExcessivePropertiesError",
+      "@type": "Class",
+      "label": "PaymentIntentContainsExcessivePropertiesError",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when stripe:PaymentIntent contains identifier at C1 or C2."
+    },
+    {
+      "@id": "stripe:PaymentIntentMismatchError",
+      "@type": "Class",
+      "label": "PaymentIntentMismatchError",
+      "subClassOf": [
+        "oa:OpenBookingError"
+      ],
+      "comment": "Error returned when stripe:PaymentIntent identifier at B/P does not match the identifier provided by the C2 response for the Order."
     }
   ]
 }
