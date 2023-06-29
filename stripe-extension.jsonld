@@ -77,12 +77,24 @@
       ]
     },
     {
-      "@id": "stripe:AuthorisePaymentIntentSimulateAction",
+      "@id": "stripe:ConfirmPaymentIntentSimulateAction",
       "@type": "Class",
-      "label": "AuthorisePaymentIntentSimulateAction",
+      "label": "ConfirmPaymentIntentSimulateAction",
       "comment": "Simulate the [Authorisation of a Stripe PaymentIntent](https://stripe.com/docs/payments/place-a-hold-on-a-payment-method#authorize-only) for a given `Order`.",
       "subClassOf": [
         "test:OpenBookingSimulateAction"
+      ]
+    },
+    {
+      "@id": "stripe:paymentMethod",
+      "@type": "Property",
+      "label": "paymentMethod",
+      "comment": "Property that determines the type of PaymentIntent authorisation. A full list of paymentMethods can be found at https://stripe.com/docs/testing?testing-method=payment-methods#declined-payments",
+      "domainIncludes": [
+        "stripe:ConfirmPaymentIntentSimulateAction"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
       ]
     },
     {
@@ -95,11 +107,47 @@
       "comment": "Error returned when a problem with Stripe was encountered that did not have one of the known error types specified in this extension"
     },
     {
+      "@id": "stripe:parameter",
+      "@type": "Property",
+      "label": "parameter",
+      "comment": "If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.",
+      "domainIncludes": [
+        "stripe:Error"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
+      ]
+    },
+    {
+      "@id": "stripe:errorCode",
+      "@type": "Property",
+      "label": "errorCode",
+      "comment": "For some errors that could be handled programmatically, a short string indicating the error code reported.",
+      "domainIncludes": [
+        "stripe:Error"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
+      ]
+    },
+    {
+      "@id": "stripe:declineCode",
+      "@type": "Property",
+      "label": "declineCode",
+      "comment": "For card errors resulting from a card issuer decline, a short string indicating the decline code, which is the card issuer’s reason for the decline if they provide one.",
+      "domainIncludes": [
+        "stripe:Error"
+      ],
+      "rangeIncludes": [
+        "schema:Text"
+      ]
+    },
+    {
       "@id": "stripe:ApiError",
       "@type": "Class",
       "label": "ApiError",
       "subClassOf": [
-        "oa:OpenBookingError"
+        "stripe:Error"
       ],
       "comment": "Error returned when an API error returned from Stripe's servers"
     },
@@ -108,7 +156,7 @@
       "@type": "Class",
       "label": "CardError",
       "subClassOf": [
-        "oa:OpenBookingError"
+        "stripe:Error"
       ],
       "comment": "Error returned when the user has provided a card that cannot be charged"
     },
@@ -117,7 +165,7 @@
       "@type": "Class",
       "label": "IdempotencyError",
       "subClassOf": [
-        "oa:OpenBookingError"
+        "stripe:Error"
       ],
       "comment": "Error returned when an Idempotency-Key was re-used on a request to Stripe that did not match the first request's API endpoint and parameters"
     },
@@ -126,7 +174,7 @@
       "@type": "Class",
       "label": "InvalidRequestError",
       "subClassOf": [
-        "oa:OpenBookingError"
+        "stripe:Error"
       ],
       "comment": "Error returned when a request to Stripe has invalid parameters"
     },
@@ -135,7 +183,7 @@
       "@type": "Class",
       "label": "MissingPaymentIntentDetailsError",
       "subClassOf": [
-        "oa:OpenBookingError"
+        "stripe:Error"
       ],
       "comment": "Error returned when the stripe:PaymentIntent details identifier and stripe:paymentPageUrl were expected at B/P, but were not set."
     },
@@ -144,7 +192,7 @@
       "@type": "Class",
       "label": "PaymentIntentContainsExcessivePropertiesError",
       "subClassOf": [
-        "oa:OpenBookingError"
+        "stripe:Error"
       ],
       "comment": "Error returned when stripe:PaymentIntent contains identifier at C1 or C2."
     },
@@ -153,7 +201,7 @@
       "@type": "Class",
       "label": "PaymentIntentMismatchError",
       "subClassOf": [
-        "oa:OpenBookingError"
+        "stripe:Error"
       ],
       "comment": "Error returned when stripe:PaymentIntent identifier at B/P does not match the identifier provided by the C2 response for the Order."
     }
