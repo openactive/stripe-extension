@@ -89,7 +89,7 @@
       "@id": "stripe:paymentMethod",
       "@type": "Property",
       "label": "paymentMethod",
-      "comment": "Property that determines the type of PaymentIntent authorisation. A full list of paymentMethods can be found at https://stripe.com/docs/testing?testing-method=payment-methods#declined-payments",
+      "comment": "Property that determines the test payment method to use when simulating a payment. A full list of test payment method values can be found at https://stripe.com/docs/testing?testing-method=payment-methods.",
       "domainIncludes": [
         "stripe:ConfirmPaymentIntentSimulateAction"
       ],
@@ -122,7 +122,7 @@
       "@id": "stripe:errorCode",
       "@type": "Property",
       "label": "errorCode",
-      "comment": "For some errors that could be handled programmatically, a short string indicating the error code reported.",
+      "comment": "For some errors that could be handled programmatically, a short string indicating the error code reported. A full list of error codes can be found at https://stripe.com/docs/error-codes.",
       "domainIncludes": [
         "stripe:Error"
       ],
@@ -134,7 +134,7 @@
       "@id": "stripe:declineCode",
       "@type": "Property",
       "label": "declineCode",
-      "comment": "For card errors resulting from a card issuer decline, a short string indicating the decline code, which is the card issuer’s reason for the decline if they provide one.",
+      "comment": "For card errors resulting from a card issuer decline, a short string indicating the decline code, which is the card issuer’s reason for the decline if they provide one. A full list of decline codes can be found at https://stripe.com/docs/declines/codes.",
       "domainIncludes": [
         "stripe:Error"
       ],
